@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="main.js" defer></script>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <title>Todo App</title>
 </head>
-<body>
-    <div class="bg-red-800">
-        <header>
-            <h1>Todo List</h1>
-            <form id="todo-form">
-                <input type="text" id="new-todo" placeholder="What needs to be done?" required>
-                <button type="submit">Add</button>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+        <header class="mb-4">
+            <h1 class="text-2xl font-bold text-center">Todo List</h1>
+            <form id="todo-form" class="flex mt-4">
+                <input type="text" id="new-todo" placeholder="What needs to be done?" required class="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600">Add</button>
             </form>
         </header>
         <main>
-            <ul id="todo-list">
+            <ul id="todo-list" class="list-none p-0">
                 <!-- Todo items will be dynamically added here -->
             </ul>
         </main>
-        <footer>
-            <span id="todo-count">0 items left</span>
-            <button id="clear-completed">Clear completed</button>
+        <footer class="mt-4 flex justify-between items-center">
+            <span id="todo-count" class="text-gray-600">0 items left</span>
+            <button id="clear-completed" class="text-red-500 hover:underline">Clear completed</button>
         </footer>
     </div>
 </body>
