@@ -1,13 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="index.css">
+    <title>Todo App</title>
+</head>
+<body>
+    <div class="bg-red-800">
+        <header>
+            <h1>Todo List</h1>
+            <form id="todo-form">
+                <input type="text" id="new-todo" placeholder="What needs to be done?" required>
+                <button type="submit">Add</button>
+            </form>
+        </header>
+        <main>
+            <ul id="todo-list">
+                <!-- Todo items will be dynamically added here -->
+            </ul>
+        </main>
+        <footer>
+            <span id="todo-count">0 items left</span>
+            <button id="clear-completed">Clear completed</button>
+        </footer>
+    </div>
+</body>
 </html>
