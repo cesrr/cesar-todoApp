@@ -1,3 +1,5 @@
+import TodoItem from "./todoItem";
+
 export default class TodoList {
     constructor() {
         this.todos = [];
