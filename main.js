@@ -21,8 +21,9 @@ todoForm.addEventListener("submit", (e) => {
   addNewTodo();
 });
 
-const createSaveButton = (todo) => {
+const createSaveButton = (todo, inputElement) => {
   const saveButton = document.createElement("button");
+
   saveButton.textContent = "Save";
   saveButton.classList.add(
     "bg-green-500",
@@ -33,8 +34,9 @@ const createSaveButton = (todo) => {
   );
 
   saveButton.addEventListener("click", () => {
-    todo.name = input.value;
-    displayTodos();
+    const newName = inputElement.value
+    todo.setName(newName)
+    displayTodos(); 
   });
 
   return saveButton
@@ -50,9 +52,10 @@ const createEditButton = (todo, todoItem) => {
     "rounded-sm",
     "hover:bg-blue-600"
   );
+  
+  const input = document.createElement("input");
 
   editButton.addEventListener("click", () => {
-    const input = document.createElement("input");
     input.type = "text";
     input.value = todo.name;
     input.classList.add(
@@ -67,8 +70,9 @@ const createEditButton = (todo, todoItem) => {
 
     todoItem.innerHTML = "";
     todoItem.appendChild(input);
-    todoItem.appendChild(createSaveButton());
+    todoItem.appendChild(createSaveButton(todo, input));
   });
+
   return editButton;
 };
 
@@ -83,7 +87,7 @@ const displayTodos = () => {
     todoItem.textContent = todo.name;
     todoItem.classList.add("flex", "justify-between");
 
-    todoItem.appendChild(createEditButton());
+    todoItem.appendChild(createEditButton(todo, todoItem));
     todoView.appendChild(todoItem);
   }
 };
