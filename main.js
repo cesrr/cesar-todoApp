@@ -76,6 +76,17 @@ const createEditButton = (todo, todoItem) => {
   return editButton;
 };
 
+const createCheckbox = (todo) => {
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox"
+
+  checkbox.addEventListener("click", () => {
+    todo.setComplete(true)
+  })
+
+  return checkbox
+}
+
 const displayTodos = () => {
   const list = todoList.getList()
   todoView.innerHTML = "";
@@ -83,10 +94,18 @@ const displayTodos = () => {
     const todo = list[i];
 
     const todoItem = document.createElement("li");
+    const itemText = document.createElement("p")
+    const itemDiv = document.createElement("div")
 
-    todoItem.textContent = todo.name;
+
+    itemText.textContent = todo.name;
     todoItem.classList.add("flex", "justify-between");
+    itemDiv.classList.add("flex", "align-center")
+    itemText.classList.add("p-1")
 
+    todoItem.appendChild(itemDiv)
+    itemDiv.appendChild(createCheckbox(todo))
+    itemDiv.appendChild(itemText)
     todoItem.appendChild(createEditButton(todo, todoItem));
     todoView.appendChild(todoItem);
   }
