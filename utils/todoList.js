@@ -9,6 +9,10 @@ export default class TodoList {
         return this.todos
     }
 
+    setList(newList) {
+        this.todos = newList
+    }
+
     clearList() {
         this.todos = []
     }

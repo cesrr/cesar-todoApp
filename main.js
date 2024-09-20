@@ -7,13 +7,15 @@ const todoObject = new TodoObject();
 const newTodoInput = document.querySelector("#new-todo");
 const todoForm = document.querySelector("#todo-form");
 const todoView = document.querySelector("#todo-view");
+const todoCount = document.querySelector("#todo-count");
+const clearCompleteBtn = document.querySelector("#clear-completed");
 
 const addNewTodo = () => {
   let todoText = newTodoInput.value;
   todoList.addTodo(todoText, false, Date.now);
   newTodoInput.value = "";
   displayTodos();
-  console.log(todoList)
+  console.log(todoList.getList());
 };
 
 todoForm.addEventListener("submit", (e) => {
@@ -34,12 +36,12 @@ const createSaveButton = (todo, inputElement) => {
   );
 
   saveButton.addEventListener("click", () => {
-    const newName = inputElement.value
-    todo.setName(newName)
-    displayTodos(); 
+    const newName = inputElement.value;
+    todo.setName(newName);
+    displayTodos();
   });
 
-  return saveButton
+  return saveButton;
 };
 
 const createEditButton = (todo, todoItem) => {
@@ -53,7 +55,7 @@ const createEditButton = (todo, todoItem) => {
     "hover:bg-white",
     "hover:text-green-500"
   );
-  
+
   const input = document.createElement("input");
 
   editButton.addEventListener("click", () => {
@@ -79,14 +81,16 @@ const createEditButton = (todo, todoItem) => {
 
 const createCheckbox = (todo) => {
   const checkbox = document.createElement("input");
-  checkbox.type = "checkbox"
+  checkbox.type = "checkbox";
+  checkbox.checked = todo.complete;
 
   checkbox.addEventListener("click", () => {
-    todo.setComplete(true)
-  })
-
-  return checkbox
-}
+    todo.setComplete(checkbox.checked);
+    displayTotalTodos();
+    console.log(checkbox.checked);
+  });
+  return checkbox;
+};
 
 const createDeleteButton = (list, todo) => {
   const deleteButton = document.createElement("button");
@@ -99,40 +103,55 @@ const createDeleteButton = (list, todo) => {
     "hover:bg-white",
     "hover:text-red-500"
   );
-  
+
   deleteButton.addEventListener("click", () => {
-    list.deleteTodo(todo.getId())
-    displayTodos()
+    list.deleteTodo(todo.getId());
+    displayTodos();
   });
   return deleteButton;
 };
 
-
 const displayTodos = () => {
-  const list = todoList.getList()
   todoView.innerHTML = "";
-  for (let i = 0; i < list.length; i++) {
-    const todo = list[i];
+  const list = todoList.getList();
 
+  list.forEach((todo) => {
     const todoItem = document.createElement("li");
-    const itemText = document.createElement("p")
-    const itemDiv = document.createElement("div")
-    const buttonDiv = document.createElement("div")
-
+    const itemText = document.createElement("p");
+    const itemDiv = document.createElement("div");
+    const buttonDiv = document.createElement("div");
 
     itemText.textContent = todo.name;
     todoItem.classList.add("flex", "justify-between");
-    itemDiv.classList.add("flex", "align-center")
-    itemText.classList.add("p-1")
+    itemDiv.classList.add("flex", "align-center");
+    itemText.classList.add("p-1");
 
-    todoItem.appendChild(itemDiv)
-    todoItem.appendChild(buttonDiv)
-    itemDiv.appendChild(createCheckbox(todo))
-    itemDiv.appendChild(itemText)
+    todoItem.appendChild(itemDiv);
+    todoItem.appendChild(buttonDiv);
+    itemDiv.appendChild(createCheckbox(todo));
+    itemDiv.appendChild(itemText);
     buttonDiv.appendChild(createEditButton(todo, todoItem));
-    buttonDiv.appendChild(createDeleteButton(todoList, todo))
+    buttonDiv.appendChild(createDeleteButton(todoList, todo));
     todoView.appendChild(todoItem);
-  }
+  });
+
+  displayTotalTodos();
+};
+
+const displayTotalTodos = () => {
+  const list = todoList.getList();
+  const incompleteTodos = list.filter((todo) => !todo.complete);
+  todoCount.textContent = `${incompleteTodos.length} todos left`;
+};
+
+const clearCompletedTodos = () => {
+  clearCompleteBtn.addEventListener("click", () => {
+    const list = todoList.getList();
+    const incompleteTodos = list.filter((todo) => !todo.complete);
+    todoList.setList(incompleteTodos)
+    displayTodos();
+  });
 };
 
 displayTodos();
+clearCompletedTodos();
