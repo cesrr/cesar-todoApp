@@ -50,7 +50,8 @@ const createEditButton = (todo, todoItem) => {
     "text-white",
     "p-1",
     "rounded-sm",
-    "hover:bg-blue-600"
+    "hover:bg-white",
+    "hover:text-green-500"
   );
   
   const input = document.createElement("input");
@@ -87,6 +88,26 @@ const createCheckbox = (todo) => {
   return checkbox
 }
 
+const createDeleteButton = (list, todo) => {
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "X";
+  deleteButton.classList.add(
+    "bg-red-500",
+    "text-white",
+    "p-1",
+    "rounded-sm",
+    "hover:bg-white",
+    "hover:text-red-500"
+  );
+  
+  deleteButton.addEventListener("click", () => {
+    list.deleteTodo(todo.getId())
+    displayTodos()
+  });
+  return deleteButton;
+};
+
+
 const displayTodos = () => {
   const list = todoList.getList()
   todoView.innerHTML = "";
@@ -96,6 +117,7 @@ const displayTodos = () => {
     const todoItem = document.createElement("li");
     const itemText = document.createElement("p")
     const itemDiv = document.createElement("div")
+    const buttonDiv = document.createElement("div")
 
 
     itemText.textContent = todo.name;
@@ -104,9 +126,11 @@ const displayTodos = () => {
     itemText.classList.add("p-1")
 
     todoItem.appendChild(itemDiv)
+    todoItem.appendChild(buttonDiv)
     itemDiv.appendChild(createCheckbox(todo))
     itemDiv.appendChild(itemText)
-    todoItem.appendChild(createEditButton(todo, todoItem));
+    buttonDiv.appendChild(createEditButton(todo, todoItem));
+    buttonDiv.appendChild(createDeleteButton(todoList, todo))
     todoView.appendChild(todoItem);
   }
 };
