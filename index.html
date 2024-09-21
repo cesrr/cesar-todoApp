@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,16 +8,42 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <title>Todo App</title>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
         <header class="mb-4">
             <h1 class="text-2xl font-bold text-center">Todo List</h1>
-            <form id="todo-form" class="flex mt-4">
-                <input type="text" id="new-todo" placeholder="Add Todo" required class="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="add-button" type="submit" class="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600">Add</button>
+
+            <form id="todo-form" class="mt-4">
+
+                <div class="border border-gray-300 rounded-md flex">
+                    <input type="text" id="new-todo" placeholder="Add Todo" required
+                        class="flex-auto p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div>
+                        <label for="category-select">Category:</label>
+
+                        <select class="rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" name="category"
+                            id="category-select">
+                            <option value="">--Select--</option>
+                        </select>
+                    </div>
+
+                </div>
+                <button id="add-button" type="submit"
+                    class="mt-1 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 w-full">Add</button>
             </form>
         </header>
         <main>
+            <div class="flex justify-between mb-2 border-b-2">
+                <div>
+                    <label for="pet-select">View:</label>
+
+                    <select name="category" id="category-select">
+                        <option value="">All</option>
+                    </select>
+                </div>
+                <button class="text-green-500 hover:underline">Edit Categories</button>
+            </div>
             <ul id="todo-view" class="list-none p-0">
                 <!-- Todo items will be dynamically added here -->
             </ul>
@@ -27,4 +54,5 @@
         </footer>
     </div>
 </body>
+
 </html>
