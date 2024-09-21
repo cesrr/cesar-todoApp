@@ -1,27 +1,23 @@
-import TodoObject from "./utils/todoItem";
 import TodoList from "./utils/todoList";
 
 const todoList = new TodoList();
-const todoObject = new TodoObject();
-
-const newTodoInput = document.querySelector("#new-todo");
-const todoForm = document.querySelector("#todo-form");
-const todoView = document.querySelector("#todo-view");
-const todoCount = document.querySelector("#todo-count");
-const clearCompleteBtn = document.querySelector("#clear-completed");
 
 const addNewTodo = () => {
+  const newTodoInput = document.querySelector("#new-todo");
+
   let todoText = newTodoInput.value;
   todoList.addTodo(todoText, false, Date.now);
   newTodoInput.value = "";
   displayTodos();
-  console.log(todoList.getList());
 };
 
-todoForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  addNewTodo();
-});
+const submitForm = () => {
+  const todoForm = document.querySelector("#todo-form");
+  todoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    addNewTodo();
+  });
+};
 
 const createSaveButton = (todo, inputElement) => {
   const saveButton = document.createElement("button");
@@ -56,9 +52,8 @@ const createEditButton = (todo, todoItem) => {
     "hover:text-green-500"
   );
 
-  const input = document.createElement("input");
-
   editButton.addEventListener("click", () => {
+    const input = document.createElement("input");
     input.type = "text";
     input.value = todo.name;
     input.classList.add(
@@ -112,6 +107,8 @@ const createDeleteButton = (list, todo) => {
 };
 
 const displayTodos = () => {
+  const todoView = document.querySelector("#todo-view");
+
   todoView.innerHTML = "";
   const list = todoList.getList();
 
@@ -139,19 +136,23 @@ const displayTodos = () => {
 };
 
 const displayTotalTodos = () => {
+  const todoCount = document.querySelector("#todo-count");
   const list = todoList.getList();
   const incompleteTodos = list.filter((todo) => !todo.complete);
   todoCount.textContent = `${incompleteTodos.length} todos left`;
 };
 
 const clearCompletedTodos = () => {
+  const clearCompleteBtn = document.querySelector("#clear-completed");
+
   clearCompleteBtn.addEventListener("click", () => {
     const list = todoList.getList();
     const incompleteTodos = list.filter((todo) => !todo.complete);
-    todoList.setList(incompleteTodos)
+    todoList.setList(incompleteTodos);
     displayTodos();
   });
 };
 
+submitForm();
 displayTodos();
 clearCompletedTodos();
