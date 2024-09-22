@@ -18,13 +18,15 @@
 
                 <div class="border border-gray-300 rounded-md flex">
                     <input type="text" id="new-todo" placeholder="Add Todo" required
-                        class="flex-auto p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="flex-auto p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mr-1">
                     <div>
                         <label for="category-select">Category:</label>
 
                         <select class="rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" name="category"
                             id="category-select">
                             <option value="">--Select--</option>
+                            <!-- <option value="personal">Personal</option>
+                            <option value="work">Work</option> -->
                         </select>
                     </div>
 
@@ -36,10 +38,12 @@
         <main>
             <div class="flex justify-between mb-2 border-b-2">
                 <div>
-                    <label for="pet-select">View:</label>
+                    <label for="category-filter">View:</label>
 
-                    <select name="category" id="category-select">
+                    <select name="category" id="category-filter">
                         <option value="">All</option>
+                        <!-- <option value="personal">Personal</option>
+                        <option value="work">Work</option> -->
                     </select>
                 </div>
                 <button class="text-green-500 hover:underline">Edit Categories</button>

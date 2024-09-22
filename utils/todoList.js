@@ -17,8 +17,8 @@ export default class TodoList {
         this.todos = []
     }
 
-    addTodo(name, category, due) {
-        const newTodo = new TodoItem(name, false, category, due)
+    addTodo(name, complete, category, id) {
+        const newTodo = new TodoItem(name, complete, category, id)
         this.todos.push(newTodo)
     }
 

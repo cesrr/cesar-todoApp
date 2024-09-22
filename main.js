@@ -1,21 +1,70 @@
 import TodoList from "./utils/todoList";
+import CategoryList from "./utils/categoryList";
 
 const todoList = new TodoList();
 
+const defaultCategories = [
+  {id: "1", name: "Work"},
+  {id: "2", name: "Personal"}
+]
+const categoryList = new CategoryList(defaultCategories)
+
+//takes new todo input value and selectedCategory and pushed it into todoList array using addTodo method, runs displayTodos and resetCategorySelection
 const addNewTodo = () => {
   const newTodoInput = document.querySelector("#new-todo");
 
   let todoText = newTodoInput.value;
-  todoList.addTodo(todoText, false, Date.now);
+  let selectedCategory = categorySelection()
+
+  todoList.addTodo(todoText, false, selectedCategory, Date.now);
   newTodoInput.value = "";
   displayTodos();
+  resetCategorySelection()
 };
 
+const createCategoryOptions = () => {
+  const categorySelector = document.querySelector("#category-select")
+  const categoryFilter = document.querySelector("#category-filter")
+
+  const categories = categoryList.getCategories()
+
+  categories.forEach((category) => {
+    const selectOption = document.createElement("option")
+    selectOption.textContent = category.name
+    selectOption.value = category.id
+
+    const filterOption = document.createElement("option")
+    filterOption.textContent = category.name
+    filterOption.value = category.id
+
+    categoryFilter.appendChild(filterOption)
+    categorySelector.appendChild(selectOption)
+  })
+
+}
+
+//takes category selector value and returns it
+const categorySelection = () => {
+  const categorySelector = document.querySelector("#category-select")
+
+  let selectedCategory = categorySelector.value;
+  return selectedCategory
+}
+
+//resets category selector after new todo form is submitted
+const resetCategorySelection = () => {
+  const categorySelector = document.querySelector("#category-select")
+  categorySelector.value = ""
+}
+
+//listens for new todo form submission and runs addNewTodo
 const submitForm = () => {
   const todoForm = document.querySelector("#todo-form");
   todoForm.addEventListener("submit", (e) => {
     e.preventDefault();
     addNewTodo();
+
+    console.log(todoList.getList())
   });
 };
 
@@ -106,6 +155,16 @@ const createDeleteButton = (list, todo) => {
   return deleteButton;
 };
 
+const createCategoryTag = (todo) => {
+  const categoryTag = document.createElement("p")
+  const category = categoryList.getCategoryById(todo.category)
+
+  categoryTag.textContent = category ? category.name : "Unknown Category"
+  categoryTag.classList.add("text-sm", "border", "border-green-500", "p-1", "text-green-700")
+
+  return categoryTag
+}
+
 const displayTodos = () => {
   const todoView = document.querySelector("#todo-view");
 
@@ -119,16 +178,20 @@ const displayTodos = () => {
     const buttonDiv = document.createElement("div");
 
     itemText.textContent = todo.name;
-    todoItem.classList.add("flex", "justify-between");
+    todoItem.classList.add("flex", "justify-between", "my-1");
     itemDiv.classList.add("flex", "align-center");
     itemText.classList.add("p-1");
 
     todoItem.appendChild(itemDiv);
     todoItem.appendChild(buttonDiv);
+
     itemDiv.appendChild(createCheckbox(todo));
     itemDiv.appendChild(itemText);
+    itemDiv.appendChild(createCategoryTag(todo))
+
     buttonDiv.appendChild(createEditButton(todo, todoItem));
     buttonDiv.appendChild(createDeleteButton(todoList, todo));
+
     todoView.appendChild(todoItem);
   });
 
@@ -153,6 +216,7 @@ const clearCompletedTodos = () => {
   });
 };
 
+createCategoryOptions()
 submitForm();
 displayTodos();
 clearCompletedTodos();
