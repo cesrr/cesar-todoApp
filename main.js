@@ -1,3 +1,8 @@
+//TODO: refactor edit and delete buttton so that they can edit/delete categories and todos, might have to create seperate event listeners for each.
+//TODO: get add category input to work
+//TODO: probably adjust edit categories UI
+
+
 import TodoList from "./utils/todoList";
 import CategoryList from "./utils/categoryList";
 
@@ -61,6 +66,73 @@ const filterByCategory = () => {
   return filterOption;
 };
 
+const createCategoryView = () => {
+  const categoriesView = document.querySelector("#categories-view");
+  const addCategoryInput = document.createElement("input");
+  const addCategoryBtn = document.createElement("button");
+  const editList = document.createElement("ul");
+
+  categoriesView.classList.add("border-b-4")
+
+  addCategoryInput.type = "text";
+  addCategoryInput.placeholder = "Add New Category";
+  addCategoryInput.classList.add(
+    "flex-auto",
+    "p-2",
+    "rounded-md",
+    "focus:outline-none",
+    "focus:ring-2",
+    "focus:ring-blue-500"
+  );
+
+  addCategoryBtn.textContent = "Add";
+  addCategoryBtn.classList.add(
+    "bg-blue-500",
+    "text-white",
+    "p-1",
+    "rounded-sm",
+    "hover:bg-white",
+    "hover:text-blue-500"
+  );
+  editList.innerHTML = "";
+
+  let categories = categoryList.getCategories();
+
+  categories.forEach((category) => {
+    const catItem = document.createElement("li");
+    const itemText = document.createElement("p");
+    const itemDiv = document.createElement("div");
+    const buttonDiv = document.createElement("div");
+
+    itemText.textContent = category.name;
+    catItem.classList.add("flex", "justify-between", "my-1");
+    itemDiv.classList.add("flex", "align-center");
+    itemText.classList.add("p-1");
+
+    catItem.appendChild(itemDiv);
+    catItem.appendChild(buttonDiv);
+
+    itemDiv.appendChild(itemText);
+
+    buttonDiv.appendChild(createEditButton(category, catItem));
+    buttonDiv.appendChild(createDeleteButton(categoryList, category));
+
+    editList.appendChild(catItem);
+  });
+
+  categoriesView.appendChild(addCategoryInput)
+  categoriesView.appendChild(addCategoryBtn)
+  categoriesView.appendChild(editList)
+};
+
+const showCategoryView = () => {
+  const categoriesViewBtn = document.querySelector("#categories-view-btn");
+
+  categoriesViewBtn.addEventListener("click", () => {
+    createCategoryView()
+  });
+};
+
 //listens for new todo form submission and runs addNewTodo
 const submitForm = () => {
   const todoForm = document.querySelector("#todo-form");
@@ -72,7 +144,8 @@ const submitForm = () => {
   });
 };
 
-const createSaveButton = (todo, inputElement) => {
+//creates various elements that attatch to todo list item
+const createSaveButton = (item, inputElement) => {
   const saveButton = document.createElement("button");
 
   saveButton.textContent = "Save";
@@ -86,14 +159,14 @@ const createSaveButton = (todo, inputElement) => {
 
   saveButton.addEventListener("click", () => {
     const newName = inputElement.value;
-    todo.setName(newName);
+    item.setName(newName);
     displayTodos();
   });
 
   return saveButton;
 };
 
-const createEditButton = (todo, todoItem) => {
+const createEditButton = (item, listItem) => {
   const editButton = document.createElement("button");
   editButton.textContent = "Edit";
   editButton.classList.add(
@@ -108,7 +181,7 @@ const createEditButton = (todo, todoItem) => {
   editButton.addEventListener("click", () => {
     const input = document.createElement("input");
     input.type = "text";
-    input.value = todo.name;
+    input.value = item.name;
     input.classList.add(
       "flex-grow",
       "p-2",
@@ -119,28 +192,27 @@ const createEditButton = (todo, todoItem) => {
       "focus:ring-blue-500"
     );
 
-    todoItem.innerHTML = "";
-    todoItem.appendChild(input);
-    todoItem.appendChild(createSaveButton(todo, input));
+    listItem.innerHTML = "";
+    listItem.appendChild(input);
+    listItem.appendChild(createSaveButton(item, input));
   });
 
   return editButton;
 };
 
-const createCheckbox = (todo) => {
+const createCheckbox = (item) => {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
-  checkbox.checked = todo.complete;
+  checkbox.checked = item.complete;
 
   checkbox.addEventListener("click", () => {
-    todo.setComplete(checkbox.checked);
+    item.setComplete(checkbox.checked);
     displayTotalTodos();
-    console.log(checkbox.checked);
   });
   return checkbox;
 };
 
-const createDeleteButton = (list, todo) => {
+const createDeleteButton = (list, item) => {
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "X";
   deleteButton.classList.add(
@@ -153,15 +225,15 @@ const createDeleteButton = (list, todo) => {
   );
 
   deleteButton.addEventListener("click", () => {
-    list.deleteTodo(todo.getId());
+    list.deleteTodo(item.getId());
     displayTodos();
   });
   return deleteButton;
 };
 
-const createCategoryTag = (todo) => {
+const createCategoryTag = (item) => {
   const categoryTag = document.createElement("p");
-  const category = categoryList.getCategoryById(todo.category);
+  const category = categoryList.getId(item.category);
 
   categoryTag.textContent = category ? category.name : "Unknown Category";
   categoryTag.classList.add(
@@ -175,10 +247,12 @@ const createCategoryTag = (todo) => {
   return categoryTag;
 };
 
+//displays todos, takes optional parameter that filters list based on category
 const displayTodos = (filterCategory = null) => {
   const todoView = document.querySelector("#todo-view");
 
   todoView.innerHTML = "";
+
   let list = todoList.getList();
 
   if (filterCategory) {
@@ -242,4 +316,5 @@ document.addEventListener("DOMContentLoaded", () => {
   createCategoryOptions();
   submitForm();
   clearCompletedTodos();
+  showCategoryView()
 });

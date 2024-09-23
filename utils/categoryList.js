@@ -27,7 +27,7 @@ export default class CategoryList {
       return this.categories;
     }
 
-    getCategoryById(id) {
+    getId(id) {
         return this.categories.find(category => category.id === id)
     }
   }
