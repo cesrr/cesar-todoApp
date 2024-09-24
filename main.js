@@ -1,17 +1,15 @@
 //TODO: get add category input to work
-//TODO: probably adjust edit categories UI
-
 
 import TodoList from "./utils/todoList";
 import CategoryList from "./utils/categoryList";
 
 const todoList = new TodoList();
-
 const defaultCategories = [
   { id: "1", name: "Work" },
   { id: "2", name: "Personal" },
 ];
 const categoryList = new CategoryList(defaultCategories);
+let isCategoryViewVisible = false;
 
 //takes new todo input value and selectedCategory and pushed it into todoList array using addTodo method, runs displayTodos and resetCategorySelection
 const addNewTodo = () => {
@@ -29,6 +27,17 @@ const addNewTodo = () => {
 const createCategoryOptions = () => {
   const categorySelector = document.querySelector("#category-select");
   const categoryFilter = document.querySelector("#category-filter");
+
+  categorySelector.innerHTML = "";
+  categoryFilter.innerHTML = "";
+
+  const defaultSelectorOption = document.createElement("option");
+  defaultSelectorOption.textContent = "--Select--";
+  categorySelector.appendChild(defaultSelectorOption);
+
+  const defaultFilterOption = document.createElement("option");
+  defaultFilterOption.textContent = "Any";
+  categoryFilter.appendChild(defaultFilterOption);
 
   const categories = categoryList.getCategories();
 
@@ -70,9 +79,12 @@ const createCategoryView = () => {
   const addCategoryInput = document.createElement("input");
   const addCategoryBtn = document.createElement("button");
 
-  categoriesView.classList.add("border-b-4")
+  if (categoriesView) {
+    categoriesView.classList.remove("hidden");
+  }
+  categoriesView.classList.add("border-b-4");
 
-  categoriesView.innerHTML = ""
+  categoriesView.innerHTML = "";
 
   addCategoryInput.type = "text";
   addCategoryInput.placeholder = "Add New Category";
@@ -95,10 +107,12 @@ const createCategoryView = () => {
     "hover:text-blue-500"
   );
 
-  categoriesView.appendChild(addCategoryInput)
-  categoriesView.appendChild(addCategoryBtn)
-  categoriesView.appendChild(createEditList())
+  categoriesView.appendChild(addCategoryInput);
+  categoriesView.appendChild(addCategoryBtn);
+  categoriesView.appendChild(createEditList());
 };
+
+
 
 const createEditList = () => {
   const editList = document.createElement("ul");
@@ -129,15 +143,33 @@ const createEditList = () => {
     editList.appendChild(catItem);
   });
 
-  return editList
-}
+  return editList;
+};
+
+const hideCategoryView = () => {
+  const categoriesView = document.querySelector("#categories-view");
+  if (categoriesView) {
+    categoriesView.classList.add("hidden");
+  }
+};
 
 const showCategoryView = () => {
   const categoriesViewBtn = document.querySelector("#categories-view-btn");
 
   categoriesViewBtn.addEventListener("click", () => {
-    createCategoryView()
+    
+    if (isCategoryViewVisible) {
+      hideCategoryView();
+      categoriesViewBtn.textContent = "Edit Categories"
+    } else {
+      createCategoryView();
+      categoriesViewBtn.textContent = "Done Editing"
+
+    }
+    isCategoryViewVisible = !isCategoryViewVisible;
+
   });
+
 };
 
 //listens for new todo form submission and runs addNewTodo
@@ -167,14 +199,15 @@ const createSaveButton = (item, inputElement) => {
   saveButton.addEventListener("click", () => {
     const newName = inputElement.value;
 
-    if(item === "todo") {
+    if (item === "todo") {
       item.setName(newName);
-      displayTodos();
     } else {
-      categoryList.editCategory(item.id, newName)
-      createCategoryView()
+      categoryList.editCategory(item.id, newName);
+      createCategoryView();
+      createCategoryOptions();
     }
-    console.log(categoryList.getCategories())
+    displayTodos();
+    console.log(categoryList.getCategories());
   });
 
   return saveButton;
@@ -239,16 +272,15 @@ const createDeleteButton = (list, item) => {
   );
 
   deleteButton.addEventListener("click", () => {
-    if(item === "todo") {
+    if (item === "todo") {
       list.deleteTodo(item.getId());
-      displayTodos();
     } else {
-      categoryList.deleteCategory(item.id)
-      createCategoryView()
+      categoryList.deleteCategory(item.id);
+      createCategoryView();
+      createCategoryOptions();
     }
-    console.log(categoryList.getCategories())
-    
-   
+    console.log(categoryList.getCategories());
+    displayTodos();
   });
   return deleteButton;
 };
@@ -338,5 +370,5 @@ document.addEventListener("DOMContentLoaded", () => {
   createCategoryOptions();
   submitForm();
   clearCompletedTodos();
-  showCategoryView()
+  showCategoryView();
 });
