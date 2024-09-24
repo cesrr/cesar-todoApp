@@ -1,4 +1,3 @@
-//TODO: refactor edit and delete buttton so that they can edit/delete categories and todos, might have to create seperate event listeners for each.
 //TODO: get add category input to work
 //TODO: probably adjust edit categories UI
 
@@ -70,9 +69,10 @@ const createCategoryView = () => {
   const categoriesView = document.querySelector("#categories-view");
   const addCategoryInput = document.createElement("input");
   const addCategoryBtn = document.createElement("button");
-  const editList = document.createElement("ul");
 
   categoriesView.classList.add("border-b-4")
+
+  categoriesView.innerHTML = ""
 
   addCategoryInput.type = "text";
   addCategoryInput.placeholder = "Add New Category";
@@ -94,6 +94,15 @@ const createCategoryView = () => {
     "hover:bg-white",
     "hover:text-blue-500"
   );
+
+  categoriesView.appendChild(addCategoryInput)
+  categoriesView.appendChild(addCategoryBtn)
+  categoriesView.appendChild(createEditList())
+};
+
+const createEditList = () => {
+  const editList = document.createElement("ul");
+
   editList.innerHTML = "";
 
   let categories = categoryList.getCategories();
@@ -120,10 +129,8 @@ const createCategoryView = () => {
     editList.appendChild(catItem);
   });
 
-  categoriesView.appendChild(addCategoryInput)
-  categoriesView.appendChild(addCategoryBtn)
-  categoriesView.appendChild(editList)
-};
+  return editList
+}
 
 const showCategoryView = () => {
   const categoriesViewBtn = document.querySelector("#categories-view-btn");
@@ -159,8 +166,15 @@ const createSaveButton = (item, inputElement) => {
 
   saveButton.addEventListener("click", () => {
     const newName = inputElement.value;
-    item.setName(newName);
-    displayTodos();
+
+    if(item === "todo") {
+      item.setName(newName);
+      displayTodos();
+    } else {
+      categoryList.editCategory(item.id, newName)
+      createCategoryView()
+    }
+    console.log(categoryList.getCategories())
   });
 
   return saveButton;
@@ -225,8 +239,16 @@ const createDeleteButton = (list, item) => {
   );
 
   deleteButton.addEventListener("click", () => {
-    list.deleteTodo(item.getId());
-    displayTodos();
+    if(item === "todo") {
+      list.deleteTodo(item.getId());
+      displayTodos();
+    } else {
+      categoryList.deleteCategory(item.id)
+      createCategoryView()
+    }
+    console.log(categoryList.getCategories())
+    
+   
   });
   return deleteButton;
 };
