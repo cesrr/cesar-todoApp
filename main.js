@@ -24,6 +24,30 @@ const addNewTodo = () => {
   resetCategorySelection();
 };
 
+const createAddCategoryBtn = (input) => {
+  const addCategoryBtn = document.createElement("button");
+
+  addCategoryBtn.textContent = "Add";
+  addCategoryBtn.classList.add(
+    "bg-blue-500",
+    "text-white",
+    "p-1",
+    "rounded-sm",
+    "hover:bg-white",
+    "hover:text-blue-500"
+  );
+
+  addCategoryBtn.addEventListener("click", () => {
+    let categoryName = input.value;
+    categoryList.addCategory(categoryName);
+    input.value = "";
+    createCategoryView()
+    createCategoryOptions();
+  });
+
+  return addCategoryBtn
+};
+
 const createCategoryOptions = () => {
   const categorySelector = document.querySelector("#category-select");
   const categoryFilter = document.querySelector("#category-filter");
@@ -75,9 +99,9 @@ const filterByCategory = () => {
 };
 
 const createCategoryView = () => {
+  console.log("createCategoryView called");
   const categoriesView = document.querySelector("#categories-view");
   const addCategoryInput = document.createElement("input");
-  const addCategoryBtn = document.createElement("button");
 
   if (categoriesView) {
     categoriesView.classList.remove("hidden");
@@ -97,22 +121,10 @@ const createCategoryView = () => {
     "focus:ring-blue-500"
   );
 
-  addCategoryBtn.textContent = "Add";
-  addCategoryBtn.classList.add(
-    "bg-blue-500",
-    "text-white",
-    "p-1",
-    "rounded-sm",
-    "hover:bg-white",
-    "hover:text-blue-500"
-  );
-
   categoriesView.appendChild(addCategoryInput);
-  categoriesView.appendChild(addCategoryBtn);
+  categoriesView.appendChild(createAddCategoryBtn(addCategoryInput));
   categoriesView.appendChild(createEditList());
 };
-
-
 
 const createEditList = () => {
   const editList = document.createElement("ul");
@@ -157,19 +169,15 @@ const showCategoryView = () => {
   const categoriesViewBtn = document.querySelector("#categories-view-btn");
 
   categoriesViewBtn.addEventListener("click", () => {
-    
     if (isCategoryViewVisible) {
       hideCategoryView();
-      categoriesViewBtn.textContent = "Edit Categories"
+      categoriesViewBtn.textContent = "Edit Categories";
     } else {
       createCategoryView();
-      categoriesViewBtn.textContent = "Done Editing"
-
+      categoriesViewBtn.textContent = "Done Editing";
     }
     isCategoryViewVisible = !isCategoryViewVisible;
-
   });
-
 };
 
 //listens for new todo form submission and runs addNewTodo
@@ -198,8 +206,8 @@ const createSaveButton = (item, inputElement) => {
 
   saveButton.addEventListener("click", () => {
     const newName = inputElement.value;
-
-    if (item === "todo") {
+    console.log(item)
+    if (item.due) {
       item.setName(newName);
     } else {
       categoryList.editCategory(item.id, newName);
@@ -207,7 +215,6 @@ const createSaveButton = (item, inputElement) => {
       createCategoryOptions();
     }
     displayTodos();
-    console.log(categoryList.getCategories());
   });
 
   return saveButton;
