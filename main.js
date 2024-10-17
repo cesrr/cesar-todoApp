@@ -60,7 +60,8 @@ const createCategoryOptions = () => {
   categorySelector.appendChild(defaultSelectorOption);
 
   const defaultFilterOption = document.createElement("option");
-  defaultFilterOption.textContent = "Any";
+  defaultFilterOption.textContent = "All";
+  defaultFilterOption.value = null
   categoryFilter.appendChild(defaultFilterOption);
 
   const categories = categoryList.getCategories();
@@ -95,6 +96,8 @@ const resetCategorySelection = () => {
 
 const filterByCategory = () => {
   const filterOption = document.querySelector("#category-filter").value;
+  console.log(filterOption)
+
   return filterOption;
 };
 
