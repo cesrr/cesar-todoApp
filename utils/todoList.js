@@ -1,4 +1,4 @@
-import TodoObject from './todoItem'
+import TodoObject from './todoItem.js'
 
 export default class TodoList {
     constructor() {
