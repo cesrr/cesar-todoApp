@@ -63,6 +63,18 @@ app.get("/api/categories", (req, res) => {
   res.json(categoryList.getCategories());
 });
 
+//get category name by ID
+app.get("/api/categories/:id", (req, res) => {
+  const categoryId = req.params.id;
+  const categories = categoryList.getCategories();
+  const categoryData = categories.find(cat => cat.id === categoryId);
+  if (categoryData) {
+    res.json(categoryData);
+  } else {
+    res.status(404).json({ error: "Category not found" });
+  }
+});
+
 //create new category
 app.post("/api/categories", (req, res) => {
     const { name } = req.body;

@@ -19,7 +19,9 @@ export default class TodoList {
 
     addTodo(name, complete, category) {
         const newTodo = new TodoObject(name, complete, category)
+        console.log('newTodo created:', newTodo);
         this.todos.push(newTodo)
+        return newTodo
     }
 
     deleteTodo(id) {

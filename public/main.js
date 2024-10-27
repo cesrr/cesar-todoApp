@@ -35,7 +35,7 @@ const fetchTodos = async () => {
   try {
     const response = await fetch("/api/todos");
     const todos = await response.json();
-    displayTodos(todos);
+    await displayTodos(todos);
   } catch (error) {
     console.error("Error fetching todos:", error);
   }
@@ -496,18 +496,19 @@ const appendCategoryTag = async (item) => {
 };
 
 //displays todos, takes optional parameter that filters list based on category
-const displayTodos = (todos, filterCategory = null) => {
+const displayTodos = async (todos, filterCategory = null) => {
   const todoView = document.querySelector("#todo-view");
 
   todoView.innerHTML = "";
 
   let list = todos;
 
+
   if (filterCategory) {
     list = list.filter((todo) => todo.category === filterCategory);
   }
 
-  list.forEach((todo) => {
+  for (const todo of list) {
     const todoItem = document.createElement("li");
     const itemText = document.createElement("p");
     const itemDiv = document.createElement("div");
@@ -520,16 +521,18 @@ const displayTodos = (todos, filterCategory = null) => {
 
     todoItem.appendChild(itemDiv);
     todoItem.appendChild(buttonDiv);
+    const categoryTag = await appendCategoryTag(todo)
+
 
     itemDiv.appendChild(createCheckbox(todo));
     itemDiv.appendChild(itemText);
-    itemDiv.appendChild(appendCategoryTag(todo));
+    itemDiv.appendChild(categoryTag);
 
     buttonDiv.appendChild(createEditButton(todo, todoItem));
-    buttonDiv.appendChild(createDeleteButton(todoList, todo));
+    buttonDiv.appendChild(createDeleteButton(list, todo));
 
     todoView.appendChild(todoItem);
-  });
+  };
 
   displayTotalTodos();
 };
