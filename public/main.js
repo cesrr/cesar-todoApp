@@ -16,7 +16,7 @@ const initializeDefaultCategories = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(category),
+        body: JSON.stringify({name: category.name}),
       });
 
       if (!response.ok) {
@@ -48,11 +48,12 @@ const addNewTodo = async () => {
   let todoText = newTodoInput.value;
   let selectedCategory = categorySelection();
 
+  console.log(todoText)
+
   const newTodo = {
-    text: todoText,
+    name: todoText,
     complete: false,
-    category: selectedCategory,
-    id: Date.now(),
+    category: selectedCategory
   };
 
   try {
@@ -151,8 +152,11 @@ const createCategoryOptions = async () => {
     }
 
     const categories = await response.json();
+    console.log("Fetched categories:", categories)
 
     categories.forEach((category) => {
+      console.log("Processing category:", category);
+
       const selectOption = document.createElement("option");
       selectOption.textContent = category.name;
       selectOption.value = category.id;
@@ -486,10 +490,10 @@ const createCategoryTag = async (item) => {
   return categoryTag;
 };
 
-// const appendCategoryTag = async (item) => {
-//   const categoryTag = await createCategoryTag(item);
-//   return categoryTag;
-// };
+const appendCategoryTag = async (item) => {
+  const categoryTag = await createCategoryTag(item);
+  return categoryTag;
+};
 
 //displays todos, takes optional parameter that filters list based on category
 const displayTodos = (todos, filterCategory = null) => {
@@ -519,7 +523,7 @@ const displayTodos = (todos, filterCategory = null) => {
 
     itemDiv.appendChild(createCheckbox(todo));
     itemDiv.appendChild(itemText);
-    itemDiv.appendChild(createCategoryTag(todo));
+    itemDiv.appendChild(appendCategoryTag(todo));
 
     buttonDiv.appendChild(createEditButton(todo, todoItem));
     buttonDiv.appendChild(createDeleteButton(todoList, todo));
@@ -587,8 +591,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   await fetchTodos();
-  await createCategoryOptions();
   await initializeDefaultCategories()
+  await createCategoryOptions();
   submitForm();
   clearCompletedTodos();
   showCategoryView();

@@ -18,8 +18,9 @@ app.get("/api/todos", (req, res) => {
 
 //create new todo
 app.post("/api/todos", (req, res) => {
-  const { name, category, complete, id } = req.body;
-  const newTodo = todoList.addTodo(name, complete, category, id);
+  const { name, complete, category } = req.body;
+  const newTodo = todoList.addTodo(name, complete, category);
+  console.log(newTodo)
   if (newTodo) {
     res.status(201).json(newTodo);
   } else {
@@ -64,13 +65,12 @@ app.get("/api/categories", (req, res) => {
 
 //create new category
 app.post("/api/categories", (req, res) => {
-    const { id, name } = req.body;
-
-    if (!id || !name) {
+    const { name } = req.body;
+    if (!name) {
       return res.status(400).json({ error: 'ID and name are required' });
     }
   
-    const newCategory = categoryList.addCategory({ id, name });
+    const newCategory = categoryList.addCategory(name);
   
     if (newCategory) {
       return res.status(201).json(newCategory);
