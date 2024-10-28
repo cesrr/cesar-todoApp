@@ -30,19 +30,6 @@ app.post("/api/todos", (req, res) => {
 });
 
 //edit todo name, complete status
-// app.put("/api/todos/:id", (req, res) => {
-//   const todoId = req.params.id;
-//   console.log(todoId)
-//   const editedTodo = req.body;
-//   console.log(editedTodo)
-//   const updatedTodo = todoList.updateTodo(todoId, editedTodo);
-//   if (updatedTodo) {
-//     res.status(200).json(updatedTodo);
-//   } else {
-//     res.status(404).json({ message: "Todo not found" });
-//   }
-// });
-
 app.put("/api/todos/:id", (req, res) => {
   const todoId = req.params.id;
   console.log(`Received request to update todo with ID: ${todoId}`);
@@ -125,7 +112,7 @@ app.put("/api/categories/:id", (req, res) => {
       return res.status(400).json({ error: 'ID and name are required' });
     }
   
-    const updatedCategory = categoryList.updateCategory(id, { name });
+    const updatedCategory = categoryList.editCategory(id, { name });
   
     if (updatedCategory) {
       return res.status(200).json(updatedCategory);

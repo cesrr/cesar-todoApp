@@ -309,7 +309,7 @@ const createSaveButton = (item, inputElement) => {
     const newName = inputElement.value;
 
     try {
-      if (item.due) {
+      if (typeof item.id === "number") {
         // Update todo name
         const response = await fetch(`/api/todos/${item.id}`, {
           method: "PUT",
@@ -344,7 +344,7 @@ const createSaveButton = (item, inputElement) => {
         createCategoryOptions();
       }
 
-      displayTodos();
+      await fetchTodos();
     } catch (error) {
       console.error("Error updating item:", error);
     }
