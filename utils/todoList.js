@@ -1,48 +1,48 @@
-import TodoObject from './todoItem.js'
+import TodoObject from "./todoItem.js";
 
 export default class TodoList {
-    constructor() {
-        this.todos = [];
-    }
+  constructor() {
+    this.todos = [];
+  }
 
-    getList() {
-        return this.todos
-    }
+  getList() {
+    return this.todos;
+  }
 
-    setList(newList) {
-        this.todos = newList
-    }
+  setList(newList) {
+    this.todos = newList;
+  }
 
-    clearList() {
-        this.todos = []
-    }
+  clearList() {
+    this.todos = [];
+  }
 
-    addTodo(name, complete, category) {
-        const newTodo = new TodoObject(name, complete, category)
-        console.log('newTodo created:', newTodo);
-        this.todos.push(newTodo)
-        return newTodo
-    }
+  addTodo(name, complete, category) {
+    const newTodo = new TodoObject(name, complete, category);
+    this.todos.push(newTodo);
+    return newTodo;
+  }
 
-    deleteTodo(id) {
-        this.todos = this.todos.filter(todo => todo.id !== id)
-    }
+  deleteTodo(id) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+  }
 
-    updateTodo(id, updatedData) {
-        const todo = this.todos.find(todo => todo.id === id)
-        if(todo) {
-            if(updatedData.name !== undefined) {
-                todo.setName(updatedData.name)
-            }
-            if(updatedData.complete !== undefined) {
-                todo.setComplete(updatedData.complete)
-            }
-            return todo
-        }
-        return null;
+  updateTodo(id, updatedData) {
+    const todoId = Number(id);
+    const todo = this.todos.find((todo) => todo.id === todoId);
+    if (todo) {
+      if (updatedData.name !== undefined) {
+        todo.setName(updatedData.name);
+      }
+      if (updatedData.complete !== undefined) {
+        todo.setComplete(updatedData.complete);
+      }
+      return todo;
     }
+    return null;
+  }
 
-    getTodosByCategory(categoryID) {
-        return this.todos.filter(todo => todo.category === categoryID)
-    }
+  getTodosByCategory(categoryID) {
+    return this.todos.filter((todo) => todo.category === categoryID);
+  }
 }

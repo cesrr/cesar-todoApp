@@ -2,7 +2,7 @@ export default class TodoObject {
     constructor(name, complete, category, due) {
         this.name = name;
         this.complete = complete;
-        this.id = Date.now();
+        this.id = Math.floor(10000 + Math.random() * 90000);
         this.category = category;
         this.due = due;
     }

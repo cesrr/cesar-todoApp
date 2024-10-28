@@ -5,7 +5,7 @@ export default class CategoryList {
   
     addCategory(name) {
       const newCategory = {
-        id: Date.now().toString(),
+        id: Math.floor(10000 + Math.random() * 90000).toString(),
         name: name
       };
       this.categories.push(newCategory);
