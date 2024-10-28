@@ -24,7 +24,14 @@ export default class TodoList {
   }
 
   deleteTodo(id) {
-    this.todos = this.todos.filter((todo) => todo.id !== id);
+    const todoId = Number(id);
+    const todoIndex = this.todos.findIndex((todo) => todo.id === todoId);
+    if (todoIndex !== -1) {
+      const deletedTodo = this.todos[todoIndex];
+      this.todos = this.todos.filter((todo) => todo.id !== todoId);
+      return deletedTodo;
+    }
+    return null;
   }
 
   updateTodo(id, updatedData) {

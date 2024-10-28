@@ -55,7 +55,13 @@ app.put("/api/todos/:id", (req, res) => {
 //delete todo
 app.delete("/api/todos/:id", (req, res) => {
   const todoId = req.params.id;
+  console.log(`Received request to delete todo with ID: ${todoId}`);
+  console.log("Todo list before deletion:", todoList);
+
+
   const deletedTodo = todoList.deleteTodo(todoId);
+  console.log("Todo list after deletion:", todoList);
+
   if (deletedTodo) {
     res.status(200).json(deletedTodo);
   } else {

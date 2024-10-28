@@ -430,7 +430,7 @@ const createDeleteButton = (list, item) => {
 
   deleteButton.addEventListener("click", async () => {
     try {
-      if (item.due) {
+      if (typeof item.id === "number") {
         // Delete todo
         const response = await fetch(`/api/todos/${item.id}`, {
           method: "DELETE",
@@ -440,7 +440,6 @@ const createDeleteButton = (list, item) => {
           throw new Error("Failed to delete todo");
         }
 
-        list.deleteTodo(item.id); // Update the local list
       } else {
         // Delete category
         const response = await fetch(`/api/categories/${item.id}`, {
@@ -450,13 +449,11 @@ const createDeleteButton = (list, item) => {
         if (!response.ok) {
           throw new Error("Failed to delete category");
         }
-
-        categoryList.deleteCategory(item.id); // Update the local category list
         createCategoryView();
         createCategoryOptions();
       }
 
-      displayTodos();
+      await fetchTodos();
     } catch (error) {
       console.error("Error deleting item:", error);
     }
