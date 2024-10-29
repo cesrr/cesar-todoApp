@@ -501,7 +501,7 @@ const displayTodos = async (todos, filterCategory = null) => {
 
   let list = todos;
 
-  if (filterCategory) {
+  if (filterCategory && filterCategory > 1) {
     list = list.filter((todo) => todo.category === filterCategory);
   }
 
