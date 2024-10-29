@@ -13,7 +13,13 @@ export default class CategoryList {
     }
   
     deleteCategory(id) {
-      this.categories = this.categories.filter(category => category.id !== id);
+      const catIndex = this.categories.findIndex((cat) => cat.id === id);
+      if (catIndex !== -1) {
+        const deletedCat = this.categories[catIndex];
+        this.categories = this.categories.filter(category => category.id !== id);
+        return deletedCat;
+      }
+      return null;
     }
   
     editCategory(id, newName) {
@@ -21,6 +27,7 @@ export default class CategoryList {
       if (category) {
         category.name = newName;
       }
+      return category
     }
   
     getCategories() {

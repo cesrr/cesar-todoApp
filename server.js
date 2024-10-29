@@ -79,6 +79,7 @@ app.get("/api/todos/category/:id", (req, res) => {
 //get categories
 app.get("/api/categories", (req, res) => {
   res.json(categoryList.getCategories());
+  console.log(categoryList.getCategories())
 });
 
 //get category name by ID
@@ -86,6 +87,7 @@ app.get("/api/categories/:id", (req, res) => {
   const categoryId = req.params.id;
   const categories = categoryList.getCategories();
   const categoryData = categories.find(cat => cat.id === categoryId);
+  console.log(categoryData)
   if (categoryData) {
     res.json(categoryData);
   } else {
@@ -118,7 +120,7 @@ app.put("/api/categories/:id", (req, res) => {
       return res.status(400).json({ error: 'ID and name are required' });
     }
   
-    const updatedCategory = categoryList.editCategory(id, { name });
+    const updatedCategory = categoryList.editCategory(id, name);
   
     if (updatedCategory) {
       return res.status(200).json(updatedCategory);
@@ -131,6 +133,7 @@ app.put("/api/categories/:id", (req, res) => {
 app.delete("/api/categories/:id", (req, res) => {
   const categoryId = req.params.id;
   const deletedCategory = categoryList.deleteCategory(categoryId);
+
   if (deletedCategory) {
     res.status(200).json(deletedCategory);
   } else {

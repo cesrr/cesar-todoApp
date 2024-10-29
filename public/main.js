@@ -31,11 +31,11 @@ const initializeDefaultCategories = async () => {
   }
 };
 
-const fetchTodos = async () => {
+const fetchTodos = async (filterCategory = null) => {
   try {
     const response = await fetch("/api/todos");
     const todos = await response.json();
-    await displayTodos(todos);
+    await displayTodos(todos, filterCategory);
   } catch (error) {
     console.error("Error fetching todos:", error);
   }
@@ -115,11 +115,8 @@ const createAddCategoryBtn = (input) => {
       if (!response.ok) {
         throw new Error('Failed to add category');
       }
-
-      const newCategory = await response.json();
-      categoryList.addCategory(newCategory); // Update the local category list
       input.value = "";
-      createCategoryView();
+      await createCategoryView();
       createCategoryOptions();
     } catch (error) {
       console.error('Error adding category:', error);
@@ -142,7 +139,7 @@ const createCategoryOptions = async () => {
 
   const defaultFilterOption = document.createElement("option");
   defaultFilterOption.textContent = "All";
-  defaultFilterOption.value = null;
+  defaultFilterOption.value = 1;
   categoryFilter.appendChild(defaultFilterOption);
 
   try {
@@ -193,9 +190,10 @@ const filterByCategory = () => {
   return filterOption;
 };
 
-const createCategoryView = () => {
+const createCategoryView = async () => {
   const categoriesView = document.querySelector("#categories-view");
   const addCategoryInput = document.createElement("input");
+  const editList = await appendEditList()
 
   if (categoriesView) {
     categoriesView.classList.remove("hidden");
@@ -217,7 +215,7 @@ const createCategoryView = () => {
 
   categoriesView.appendChild(addCategoryInput);
   categoriesView.appendChild(createAddCategoryBtn(addCategoryInput));
-  categoriesView.appendChild(createEditList());
+  categoriesView.appendChild(editList);
 };
 
 const createEditList = async () => {
@@ -233,7 +231,7 @@ const createEditList = async () => {
 
     const categories = await response.json();
 
-    categories.forEach((category) => {
+    for (const category of categories){
       const catItem = document.createElement("li");
       const itemText = document.createElement("p");
       const itemDiv = document.createElement("div");
@@ -250,14 +248,19 @@ const createEditList = async () => {
       itemDiv.appendChild(itemText);
 
       buttonDiv.appendChild(createEditButton(category, catItem));
-      buttonDiv.appendChild(createDeleteButton(categoryList, category));
+      buttonDiv.appendChild(createDeleteButton(categories, category));
 
       editList.appendChild(catItem);
-    });
+    };
   } catch (error) {
     console.error('Error fetching categories:', error);
   }
 
+  return editList;
+};
+
+const appendEditList = async () => {
+  const editList = await createEditList();
   return editList;
 };
 
@@ -338,9 +341,7 @@ const createSaveButton = (item, inputElement) => {
           throw new Error("Failed to update category");
         }
 
-        const updatedCategory = await response.json();
-        item.name = updatedCategory.name; // Update the local item with the server response
-        createCategoryView();
+        await createCategoryView();
         createCategoryOptions();
       }
 
@@ -500,10 +501,10 @@ const displayTodos = async (todos, filterCategory = null) => {
 
   let list = todos;
 
-
   if (filterCategory) {
     list = list.filter((todo) => todo.category === filterCategory);
   }
+
 
   for (const todo of list) {
     const todoItem = document.createElement("li");
@@ -572,8 +573,8 @@ const clearCompletedTodos = () => {
         }
       }
 
-      displayTodos();
-      displayTotalTodos(); // Update the total todos count
+      await fetchTodos();
+      await displayTotalTodos(); // Update the total todos count
     } catch (error) {
       console.error('Error clearing completed todos:', error);
     }
@@ -586,8 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   categoryFilter.addEventListener("change", async () => {
     const filterOption = filterByCategory();
-    const todos = await fetchTodos()
-    displayTodos(todos, filterOption);
+    await fetchTodos(filterOption)
   });
 
   await fetchTodos();
